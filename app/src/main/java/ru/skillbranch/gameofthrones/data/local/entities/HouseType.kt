@@ -1,4 +1,4 @@
-package ru.skillbranch.gameofthrones.data.local
+package ru.skillbranch.gameofthrones.data.local.entities
 
 enum class HouseType(
     val title: String
