@@ -71,5 +71,5 @@ data class RelativeCharacter(
     val id: String,
     val name: String,
     @ColumnInfo(name = "house_id")
-    val house: HouseType //rel
+    val house: String //rel
 )

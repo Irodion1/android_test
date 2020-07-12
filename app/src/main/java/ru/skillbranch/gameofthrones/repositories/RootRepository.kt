@@ -4,6 +4,7 @@ import androidx.annotation.VisibleForTesting
 import kotlinx.coroutines.*
 import ru.skillbranch.gameofthrones.AppConfig
 import ru.skillbranch.gameofthrones.data.local.DbManager
+import ru.skillbranch.gameofthrones.data.local.DbManager.db
 import ru.skillbranch.gameofthrones.data.local.dao.CharacterDao
 import ru.skillbranch.gameofthrones.data.local.dao.HouseDao
 import ru.skillbranch.gameofthrones.data.local.entities.Character
@@ -33,7 +34,21 @@ object RootRepository {
      */
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     fun getAllHouses(result: (houses: List<HouseRes>) -> Unit) {
-
+        scope.launch {
+            val res = mutableListOf<HouseRes>()
+            var flag = true
+            var i = 1
+            while (flag) {
+                api.houses(i).also {
+                    res.addAll(it)
+                    if (it.size == 0) {
+                        flag = false
+                    }
+                }
+                i++
+            }
+            result(res)
+        }
     }
 
     /**
@@ -43,9 +58,15 @@ object RootRepository {
      */
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     fun getNeedHouses(vararg houseNames: String, result: (houses: List<HouseRes>) -> Unit) {
-//        return houseNames.fold(mutableListOf. -> ()) { acc, title ->
-//            acc.also { it.add(api.housesByName(title).first()) }
-//        }
+        scope.launch {
+            result(
+                houseNames.fold(mutableListOf<HouseRes>()) { acc, title ->
+                    acc.also {
+                        it.add(api.housesByName(title).first())
+                    }
+                }
+            )
+        }
     }
 
     /**
@@ -97,7 +118,10 @@ object RootRepository {
      */
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     fun dropDb(complete: () -> Unit) {
-        //TODO implement me
+        scope.launch {
+            db.clearAllTables()
+            complete()
+        }
     }
 
     /**
@@ -108,7 +132,9 @@ object RootRepository {
      */
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     fun findCharactersByHouseName(name: String, result: (characters: List<CharacterItem>) -> Unit) {
-        //TODO implement me
+        scope.launch {
+            result(characterDao.findCharacterList(name))
+        }
     }
 
     /**
@@ -119,7 +145,9 @@ object RootRepository {
      */
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     fun findCharacterFullById(id: String, result: (character: CharacterFull) -> Unit) {
-        //TODO implement me
+        scope.launch {
+            result(characterDao.findCharacterFull(id))
+        }
     }
 
     /**
@@ -127,13 +155,12 @@ object RootRepository {
      * @param result - колбек о завершении очистки db
      */
     fun isNeedUpdate(result: (isNeed: Boolean) -> Unit) {
-        //TODO implement me
+        scope.launch {
+            result(houseDao.recordsCount() == 0)
+        }
     }
 
     suspend fun isNeedUpdate() = houseDao.recordsCount() == 0
-
-//    fun findCharacters(houseName: String) = characterDao.findCharacters(houseName)
-//    fun findCharacters(id: String): LiveData<CharacterFull> = characterDao.findCharacter(id)
 
     suspend fun sync() {
         val pairs = needHouseWithCharacters(*AppConfig.NEED_HOUSES)
@@ -147,7 +174,6 @@ object RootRepository {
                 ch.addAll(characters)
             }
         }
-        //Log.d("M_RootRepository", "finished")
         houseDao.upsert(lists.first)
         characterDao.upsert(lists.second)
     }

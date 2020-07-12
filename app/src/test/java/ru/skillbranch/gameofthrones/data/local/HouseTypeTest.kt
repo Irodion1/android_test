@@ -22,10 +22,11 @@ class HouseTypeTest {
     @Test
     fun test_correctStringGivesCorrectHouse() {
         assertEquals(HouseType.STARK, HouseType.fromString("Stark"))
+        assertEquals(HouseType.MARTELL, HouseType.fromString("Martell"))
     }
 
     @Test
-    fun test_correctStringGivesCorrectHouse2() {
-        assertEquals(HouseType.MARTELL, HouseType.fromString("Martell"))
+    fun test_equals() {
+        assertEquals("Martell", HouseType.fromString("Martell").toString())
     }
 }

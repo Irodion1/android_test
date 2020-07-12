@@ -28,11 +28,13 @@ data class CharacterRes(
         get() = father.lastSegment()
     val motherId
         get() = mother.lastSegment()
+    val spouseId
+        get() = spouse.lastSegment()
 
 
     fun toCharacter(house: String): Character {
         return Character(
-            id,
+            url.lastSegment(),
             name,
             gender,
             culture,
@@ -40,9 +42,9 @@ data class CharacterRes(
             died,
             titles,
             aliases,
-            father,
-            mother,
-            spouse,
+            fatherId,
+            motherId,
+            spouseId,
             HouseType.fromString(house)
         )
     }

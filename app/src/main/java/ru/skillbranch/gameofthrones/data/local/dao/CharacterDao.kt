@@ -31,18 +31,18 @@ interface CharacterDao : BaseDao<Character> {
     @Query(
         """
             SELECT * FROM CharacterFull
-            WHERE id =:id
+            WHERE id =:characterId
         """
     )
-    fun findCharacter(id: String): LiveData<CharacterFull>
+    fun findCharacter(characterId: String): LiveData<CharacterFull>
 
     @Query(
         """
             SELECT * FROM CharacterFull
-            WHERE id =:id
+            WHERE id =:characterId
         """
     )
-    fun findCharacterFull(id: String): CharacterFull
+    fun findCharacterFull(characterId: String): CharacterFull
 
     @Transaction
     fun upsert(list: List<Character>) {

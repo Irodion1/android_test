@@ -11,6 +11,10 @@ enum class HouseType(
     MARTELL("Martell"),
     TYRELL("Tyrell");
 
+    override fun toString(): String {
+        return title
+    }
+
     companion object {
         fun fromString(title: String): HouseType {
             val found = HouseType.values().find { it.title.equals(title) }
