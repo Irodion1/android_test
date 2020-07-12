@@ -1,12 +1,22 @@
 package ru.skillbranch.gameofthrones
 
 import android.app.Application
+import android.content.Context
 
-object App : Application() {
-    lateinit var instance: App
+class App : Application() {
 
-    override fun onCreate() {
-        super.onCreate()
+    companion object {
+        private var instance: App? = null
+
+        fun applicationContext(): Context {
+
+            return instance!!.applicationContext
+        }
+
+    }
+
+    init {
         instance = this
     }
+
 }

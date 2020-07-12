@@ -6,9 +6,27 @@ import androidx.room.Query
 import androidx.room.Transaction
 import ru.skillbranch.gameofthrones.data.local.entities.Character
 import ru.skillbranch.gameofthrones.data.local.entities.CharacterFull
+import ru.skillbranch.gameofthrones.data.local.entities.CharacterItem
 
 @Dao
 interface CharacterDao : BaseDao<Character> {
+
+    @Query(
+        """
+            SELECT * from CharacterItem
+            WHERE house = :title
+        """
+    )
+    fun findCharacters(title: String): LiveData<List<CharacterItem>>
+
+
+    @Query(
+        """
+            SELECT * from CharacterItem
+            where house =:title
+        """
+    )
+    fun findCharacterList(title: String): List<CharacterItem>
 
     @Query(
         """

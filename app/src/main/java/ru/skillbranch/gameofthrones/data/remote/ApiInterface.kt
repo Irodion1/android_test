@@ -11,7 +11,7 @@ interface ApiInterface {
     suspend fun houses(@Query("page") page: Int = 1): List<HouseRes>
 
     @GET("characters/{id}")
-    suspend fun character(@Path("id") id: String): List<CharacterRes>
+    suspend fun character(@Path("id") id: String): CharacterRes
 
     @GET("houses")
     suspend fun housesByName(@Query("name") name: String): List<HouseRes>

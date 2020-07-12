@@ -19,4 +19,9 @@
         android:name="ru.skillbranch.gameofthrones.ui.house.HousesFragment"
         android:label="fragment_houses"
         tools:layout="@layout/fragment_houses" />
+    <fragment
+        android:id="@+id/characterFragment"
+        android:name="ru.skillbranch.gameofthrones.ui.character.CharacterFragment"
+        android:label="fragment_character2"
+        tools:layout="@layout/fragment_character2" />
 </navigation>

@@ -17,7 +17,7 @@ import ru.skillbranch.gameofthrones.data.local.entities.House
 
 object DbManager {
     val db = Room.databaseBuilder(
-        App.instance,
+        App.applicationContext(),
         AppDb::class.java, DATABASE_NAME
     )
         .build()
