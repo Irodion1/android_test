@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import ru.skillbranch.gameofthrones.R
 import ru.skillbranch.gameofthrones.repositories.RootRepository
 import ru.skillbranch.gameofthrones.utils.Utils.networkAvailable
 
@@ -20,7 +21,7 @@ class RootViewModel(val app: Application) : AndroidViewModel(app) {
         viewModelScope.launch(Dispatchers.IO) {
             if (repository.isNeedUpdate()) {
                 if (!networkAvailable(app)) {
-                    result.postValue(LoadResult.Error("Интернет недоступен - приложение не может быть запущенно. Подключитесь к интернету и перезапустите приложение"))
+                    result.postValue(LoadResult.Error(app.getString(R.string.message_error_nonetwork)))
                     return@launch
                 }
                 repository.sync()

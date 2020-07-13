@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/splashFragment">
+    app:startDestination="@id/housesFragment">
 
     <fragment
         android:id="@+id/splashFragment"
@@ -12,16 +12,27 @@
         tools:layout="@layout/fragment_splash">
         <action
             android:id="@+id/action_splashFragment_to_housesFragment"
-            app:destination="@id/housesFragment" />
+            app:destination="@id/housesFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/housesFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/housesFragment"
-        android:name="ru.skillbranch.gameofthrones.ui.house.HousesFragment"
+        android:name="ru.skillbranch.gameofthrones.ui.houses.HousesFragment"
         android:label="fragment_houses"
-        tools:layout="@layout/fragment_houses" />
+        tools:layout="@layout/fragment_houses">
+        <action
+            android:id="@+id/action_housesFragment_to_characterFragment2"
+            app:destination="@id/characterFragment" />
+    </fragment>
     <fragment
         android:id="@+id/characterFragment"
         android:name="ru.skillbranch.gameofthrones.ui.character.CharacterFragment"
         android:label="fragment_character2"
-        tools:layout="@layout/fragment_character2" />
+        tools:layout="@layout/fragment_character2">
+        <action
+            android:id="@+id/action_characterFragment_self"
+            app:destination="@id/characterFragment" />
+    </fragment>
 </navigation>

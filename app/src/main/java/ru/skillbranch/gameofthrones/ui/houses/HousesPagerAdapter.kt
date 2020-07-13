@@ -1,14 +1,16 @@
-package ru.skillbranch.gameofthrones.ui.house
+package ru.skillbranch.gameofthrones.ui.houses
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import ru.skillbranch.gameofthrones.data.local.entities.HouseType
+import ru.skillbranch.gameofthrones.ui.houses.house.HouseFragment
 
 class HousesPagerAdapter(var fm: FragmentManager) :
     FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+
     override fun getItem(position: Int): Fragment {
-        return HousesFragment.newInstance(HouseType.values()[position].title)
+        return HouseFragment.newInstance(HouseType.values()[position].title)
     }
 
     override fun getCount(): Int {

@@ -1,4 +1,4 @@
-package ru.skillbranch.gameofthrones.ui.house
+package ru.skillbranch.gameofthrones.ui.houses.house
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
