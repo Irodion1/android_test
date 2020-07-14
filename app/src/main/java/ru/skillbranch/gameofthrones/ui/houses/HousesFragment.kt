@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.*
 import android.widget.SearchView
 import androidx.fragment.app.Fragment
+import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.fragment_houses.*
 import ru.skillbranch.gameofthrones.R
 import ru.skillbranch.gameofthrones.ui.RootActivity
@@ -23,28 +24,27 @@ class HousesFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         (requireActivity() as RootActivity).setSupportActionBar(toolbar)
         view_pager.adapter = housesPagerAdapter
+        with(tabs) {
+            setupWithViewPager(view_pager)
+            addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+                override fun onTabUnselected(tab: TabLayout.Tab?) {}
+
+                override fun onTabReselected(tab: TabLayout.Tab?) {}
+
+                override fun onTabSelected(tab: TabLayout.Tab) {
+                    val position = tab.position
+                    //val rect = Rect()
+//                    val tabView = tab.view as View
+
+                }
+            })
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
         housesPagerAdapter = HousesPagerAdapter(childFragmentManager)
-//        with(tabs) {
-//            setupWithViewPager(view_pager)
-//            addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-//                override fun onTabUnselected(tab: TabLayout.Tab?) {
-//                    TODO("Not yet implemented")
-//                }
-//
-//                override fun onTabReselected(tab: TabLayout.Tab?) {
-//                    TODO("Not yet implemented")
-//                }
-//
-//                override fun onTabSelected(tab: TabLayout.Tab) {
-//                    val position = tab.position
-//
-//                }
-//            })
     }
 
 
@@ -56,10 +56,4 @@ class HousesFragment : Fragment() {
         super.onCreateOptionsMenu(menu, inflater)
     }
 
-    companion object {
-        fun newInstance(houseTitle: String): HousesFragment {
-            return HousesFragment()
-        }
-
-    }
 }

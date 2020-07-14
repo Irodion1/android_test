@@ -1,6 +1,7 @@
 package ru.skillbranch.gameofthrones.repositories
 
 import androidx.annotation.VisibleForTesting
+import androidx.lifecycle.LiveData
 import kotlinx.coroutines.*
 import ru.skillbranch.gameofthrones.AppConfig
 import ru.skillbranch.gameofthrones.data.local.DbManager
@@ -161,6 +162,10 @@ object RootRepository {
     }
 
     suspend fun isNeedUpdate() = houseDao.recordsCount() == 0
+
+    //    fun findCharacters(houseName: String) = characterDao.findCharacters(houseName)
+    fun findCharacters(title: String): LiveData<List<CharacterItem>> =
+        characterDao.findCharacters(title)
 
     suspend fun sync() {
         val pairs = needHouseWithCharacters(*AppConfig.NEED_HOUSES)
