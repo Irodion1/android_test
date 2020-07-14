@@ -18,6 +18,7 @@ class RootActivity : AppCompatActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_root)
         Log.d("M_RootActivity", "RootActivity created")

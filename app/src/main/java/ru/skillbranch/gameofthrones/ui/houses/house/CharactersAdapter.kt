@@ -72,7 +72,7 @@ class CharactersAdapter(private val listener: (CharacterItem) -> Unit) :
                 .filter { it.isNotBlank() }
                 .also {
                     tv_aliases.text = if (it.isEmpty()) "Bastard hat keine Titel"
-                    else it.joinToString { " , " }
+                    else it.joinToString(" , ")
                 }
             iv_avatar.setImageResource(item.house.icon)
 

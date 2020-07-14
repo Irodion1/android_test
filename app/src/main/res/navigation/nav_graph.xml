@@ -29,10 +29,19 @@
     <fragment
         android:id="@+id/characterFragment"
         android:name="ru.skillbranch.gameofthrones.ui.character.CharacterFragment"
-        android:label="fragment_character2"
-        tools:layout="@layout/fragment_character2">
+        android:label="fragment_character"
+        tools:layout="@layout/fragment_character">
         <action
             android:id="@+id/action_characterFragment_self"
             app:destination="@id/characterFragment" />
+        <argument
+            android:name="id"
+            app:argType="string" />
+        <argument
+            android:name="house"
+            app:argType="string" />
+        <argument
+            android:name="title"
+            app:argType="string" />
     </fragment>
 </navigation>

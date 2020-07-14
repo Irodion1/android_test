@@ -11,7 +11,8 @@
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
         android:theme="@style/AppTheme.AppBarOverlay"
-        tools:expanded="false">
+        tools:expanded="true"
+        tools:image="@dr">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/collapsing_layout"
@@ -21,24 +22,24 @@
             app:contentScrim="?attr/colorPrimary"
             app:expandedTitleGravity="center_horizontal|bottom"
             app:expandedTitleMarginBottom="64dp"
+            app:expandedTitleTextAppearance="@style/CollapsingTitleAppearence"
             app:layout_scrollFlags="exitUntilCollapsed|scroll"
             app:toolbarId="@+id/toolbar">
-            <!--            app:expandedTitleTextAppearance="@style/CollapsingTitleAppearance"-->
 
             <ImageView
                 android:id="@+id/iv_arms"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="649dp"
                 android:fitsSystemWindows="true"
-                android:scaleType="centerCrop"
+                android:scaleType="fitCenter"
+                android:src="@drawable/stark_coast_of_arms"
                 app:layout_collapseMode="parallax"
                 tools:visibility="visible" />
-            <!--                android:src="@drawable/stark"-->
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
+                android:layout_height="0dp"
                 android:fitsSystemWindows="false"
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/AppTheme.PopupOverlay" />
@@ -62,7 +63,7 @@
                 android:id="@+id/tv_words_label"
                 android:layout_width="104dp"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/splash"
+                android:drawableLeft="@drawable/ic_icon_decor"
                 android:drawablePadding="8dp"
                 android:drawableTint="?attr/colorAccent"
                 android:fontFamily="sans-serif-medium"
@@ -89,7 +90,7 @@
                 android:layout_width="104dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:drawableLeft="@drawable/splash"
+                android:drawableLeft="@drawable/ic_icon_decor"
                 android:drawablePadding="8dp"
                 android:drawableTint="?attr/colorAccent"
                 android:fontFamily="sans-serif-medium"
@@ -116,7 +117,7 @@
                 android:layout_width="104dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:drawableLeft="@drawable/splash"
+                android:drawableLeft="@drawable/ic_icon_decor"
                 android:drawablePadding="8dp"
                 android:drawableTint="?attr/colorAccent"
                 android:fontFamily="sans-serif-medium"
@@ -144,7 +145,7 @@
                 android:layout_width="104dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:drawableLeft="@drawable/splash"
+                android:drawableLeft="@drawable/ic_icon_decor"
                 android:drawablePadding="8dp"
                 android:drawableTint="?attr/colorAccent"
                 android:fontFamily="sans-serif-medium"

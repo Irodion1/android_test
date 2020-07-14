@@ -21,7 +21,7 @@
         <activity
             android:name=".ui.RootActivity"
             android:label="Game Of Thrones"
-            android:theme="@style/AppTheme">
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -163,7 +163,8 @@ object RootRepository {
 
     suspend fun isNeedUpdate() = houseDao.recordsCount() == 0
 
-    //    fun findCharacters(houseName: String) = characterDao.findCharacters(houseName)
+    fun findCharacter(id: String) = characterDao.findCharacter(id)
+
     fun findCharacters(title: String): LiveData<List<CharacterItem>> =
         characterDao.findCharacters(title)
 
