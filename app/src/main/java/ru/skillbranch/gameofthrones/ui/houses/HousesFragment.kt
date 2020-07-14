@@ -31,12 +31,7 @@ class HousesFragment : Fragment() {
 
                 override fun onTabReselected(tab: TabLayout.Tab?) {}
 
-                override fun onTabSelected(tab: TabLayout.Tab) {
-                    val position = tab.position
-                    //val rect = Rect()
-//                    val tabView = tab.view as View
-
-                }
+                override fun onTabSelected(tab: TabLayout.Tab) {}
             })
         }
     }
