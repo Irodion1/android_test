@@ -11,7 +11,9 @@ object UserHolder {
     fun importUsers(list: List<String>): List<User> = mutableListOf<User>()
         .apply {
             list.forEach {
-                this.add(User.makeUserCsv(it.trim()))
+                this.add(User.makeUserCsv(it.trim()).also { user ->
+                    map[user.login] = user
+                })
             }
         }
 
