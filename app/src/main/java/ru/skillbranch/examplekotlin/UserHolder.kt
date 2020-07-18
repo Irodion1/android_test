@@ -1,15 +1,21 @@
 package ru.skillbranch.examplekotlin
 
 import androidx.annotation.VisibleForTesting
-import ru.skillbranch.examplekotlin.UserHolder.isValidePhoneNumber
-import ru.skillbranch.examplekotlin.UserHolder.normalizedPhoneNumber
 
 object UserHolder {
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     val map = mutableMapOf<String, User>()
 
-    fun requestAccessCode(login: String): Unit {
+
+    fun importUsers(list: List<String>): List<User?> = mutableListOf<User?>()
+        .apply {
+            list.forEach {
+                this.add(User.makeUserCsv(it))
+            }
+        }
+
+    fun requestAccessCode(login: String) {
         val phone = login.normalizedPhoneNumber()
         if (!phone.isValidePhoneNumber()) {
             throw java.lang.IllegalArgumentException("Enter a valid phone number starting with a + and containing 11 digits")

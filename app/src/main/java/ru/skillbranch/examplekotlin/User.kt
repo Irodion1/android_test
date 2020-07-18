@@ -1,6 +1,7 @@
 package ru.skillbranch.examplekotlin
 
 import androidx.annotation.VisibleForTesting
+import ru.skillbranch.examplekotlin.User.Factory.fullNameToPair
 import java.math.BigInteger
 import java.security.MessageDigest
 import java.security.SecureRandom
@@ -24,7 +25,8 @@ class User private constructor(
             .map { it.first().toUpperCase() }
             .joinToString(" ")
 
-    private var phone: String? = null
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    var phone: String? = null
         set(value) {
             field = value?.replace("""[^+\d]""".toRegex(), "")
         }
@@ -61,6 +63,24 @@ class User private constructor(
     ) : this(firstName, lastName, rawPhone = rawPhone, meta = mapOf("auth" to "sms")) {
         println("Secondary phone constructor")
         changeAcessCodeInner(rawPhone)
+    }
+
+    constructor(
+        firstName: String,
+        lastName: String?,
+        email: String?,
+        password: String?,
+        rawPhone: String?
+    ) : this(
+        firstName,
+        lastName,
+        email = email,
+        rawPhone = rawPhone,
+        meta = mapOf("src" to "csv")
+    ) {
+        println("Secondary csv constructor")
+        passwordHash = password ?: passwordHash
+        if (rawPhone != null) changeAcessCodeInner(rawPhone)
     }
 
 
@@ -141,6 +161,12 @@ class User private constructor(
     }
 
     companion object Factory {
+
+        private val USER_FULLNAME_IDX = 0
+        private val USER_EMAIL_IDX = 1
+        private val USER_PASSHASH_IDX = 2
+        private val USER_PHONE_IDX = 3
+
         fun makeUser(
             fullName: String,
             email: String? = null,
@@ -158,6 +184,28 @@ class User private constructor(
                 )
                 else -> throw IllegalArgumentException("Email or phone must not be blank")
             }
+        }
+
+        fun makeUserCsv(input: String): User? {
+            if (input.isBlank()) {
+                return null
+            }
+            val tokens = mutableListOf<String?>().apply {
+                input.split(";").forEach {
+                    if (it == "") this.add(null)
+                    else this.add(it)
+                }
+            }
+
+            val (salt, pass) = input.split(";")[USER_PASSHASH_IDX].split(":")
+            val (firstName, lastName) = input.split(";")[USER_FULLNAME_IDX].fullNameToPair()
+            return User(
+                firstName,
+                lastName,
+                tokens[USER_EMAIL_IDX],
+                pass,
+                tokens[USER_PHONE_IDX]
+            )
         }
 
         private fun String.fullNameToPair(): Pair<String, String?> =
