@@ -1,7 +1,6 @@
-package ru.skillbranch.examplekotlin
+package ru.skillbranch.kotlinexample
 
 import androidx.annotation.VisibleForTesting
-import ru.skillbranch.examplekotlin.User.Factory.fullNameToPair
 import java.math.BigInteger
 import java.security.MessageDigest
 import java.security.SecureRandom

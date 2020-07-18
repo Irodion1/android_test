@@ -1,4 +1,4 @@
-package ru.skillbranch.examplekotlin
+package ru.skillbranch.kotlinexample
 
 import androidx.annotation.VisibleForTesting
 
