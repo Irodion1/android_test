@@ -69,7 +69,8 @@ class User private constructor(
         lastName: String?,
         email: String?,
         password: String?,
-        rawPhone: String?
+        rawPhone: String?,
+        salt: String?
     ) : this(
         firstName,
         lastName,
@@ -77,6 +78,7 @@ class User private constructor(
         rawPhone = rawPhone,
         meta = mapOf("src" to "csv")
     ) {
+        this.salt = salt
         println("Secondary csv constructor")
         passwordHash = password ?: passwordHash
         if (rawPhone != null) changeAcessCodeInner(rawPhone)
@@ -193,14 +195,15 @@ class User private constructor(
                 }
             }
 
-            val pass = input.split(";")[USER_PASSHASH_IDX].split(":").last()
+            val (salt, pass) = input.split(";")[USER_PASSHASH_IDX].split(":")
             val (firstName, lastName) = input.split(";")[USER_FULLNAME_IDX].fullNameToPair()
             return User(
                 firstName,
                 lastName,
                 tokens[USER_EMAIL_IDX],
                 pass,
-                tokens[USER_PHONE_IDX]
+                tokens[USER_PHONE_IDX],
+                salt
             )
         }
 

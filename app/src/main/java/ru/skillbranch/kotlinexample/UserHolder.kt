@@ -46,7 +46,6 @@ object UserHolder {
     }
 
     fun loginUser(login: String, password: String): String? {
-
         return when {
             login.normalizedPhoneNumber().isValidePhoneNumber() -> {
                 map[login.normalizedPhoneNumber()]?.let {
