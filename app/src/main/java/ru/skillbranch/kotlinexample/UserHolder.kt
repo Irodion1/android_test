@@ -8,7 +8,7 @@ object UserHolder {
     val map = mutableMapOf<String, User>()
 
 
-    fun importUsers(list: List<String>): List<User?> = mutableListOf<User?>()
+    fun importUsers(list: List<String>): List<User> = mutableListOf<User>()
         .apply {
             list.forEach {
                 this.add(User.makeUserCsv(it))

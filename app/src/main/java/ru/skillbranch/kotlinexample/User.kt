@@ -185,10 +185,7 @@ class User private constructor(
             }
         }
 
-        fun makeUserCsv(input: String): User? {
-            if (input.isBlank()) {
-                return null
-            }
+        fun makeUserCsv(input: String): User {
             val tokens = mutableListOf<String?>().apply {
                 input.split(";").forEach {
                     if (it == "") this.add(null)
@@ -196,7 +193,7 @@ class User private constructor(
                 }
             }
 
-            val (salt, pass) = input.split(";")[USER_PASSHASH_IDX].split(":")
+            val pass = input.split(";")[USER_PASSHASH_IDX].split(":").last()
             val (firstName, lastName) = input.split(";")[USER_FULLNAME_IDX].fullNameToPair()
             return User(
                 firstName,
