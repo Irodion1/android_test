@@ -11,7 +11,7 @@ object UserHolder {
     fun importUsers(list: List<String>): List<User> = mutableListOf<User>()
         .apply {
             list.forEach {
-                this.add(User.makeUserCsv(it))
+                this.add(User.makeUserCsv(it.trim()))
             }
         }
 
