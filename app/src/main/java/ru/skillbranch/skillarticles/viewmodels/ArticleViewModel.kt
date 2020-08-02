@@ -162,7 +162,7 @@ data class ArticleState(
     val category: String? = null,
     val categoryIcon: Any? = null,
     val date: String? = null,
-    val author: String? = null,
+    val author: Any? = null,
     val poster: String? = null,
     val content: List<Any> = emptyList(),
     val review: List<Any> = emptyList()
