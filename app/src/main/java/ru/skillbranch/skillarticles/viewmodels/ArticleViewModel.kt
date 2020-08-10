@@ -1,6 +1,8 @@
 package ru.skillbranch.skillarticles.viewmodels
 
 import android.util.Log
+import android.view.MenuItem
+import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.LiveData
 import ru.skillbranch.skillarticles.data.ArticleData
 import ru.skillbranch.skillarticles.data.ArticlePersonalInfo
@@ -10,7 +12,7 @@ import ru.skillbranch.skillarticles.extensions.data.toArticlePersonalInfo
 import ru.skillbranch.skillarticles.extensions.format
 
 class ArticleViewModel(private val articleId: String) : BaseViewModel<ArticleState>(ArticleState()),
-    IArticleViewModel {
+    IArticleViewModel, SearchView.OnQueryTextListener, MenuItem.OnActionExpandListener {
     val repositiry = ArticleRepository
     var menuIsShown: Boolean = false
 
@@ -118,30 +120,34 @@ class ArticleViewModel(private val articleId: String) : BaseViewModel<ArticleSta
 
 
     override fun handleSearchMode(isSearch: Boolean) {
-
-    }
-
-    override fun handleSearch(query: String?) {
-
-    }
-
-    fun showMenu() {
-        updateState { it.copy(isShowMenu = menuIsShown) }
-    }
-
-    fun hideMenu() {
-        updateState { it.copy(isShowMenu = false) }
-    }
-
-    fun handleSearchQuery(query: String?) {
-        updateState { it.copy(searchQuery = query) }
-    }
-
-    fun handleIsSearch(isSearch: Boolean) {
         updateState { it.copy(isSearch = isSearch) }
     }
 
+    override fun handleSearch(query: String?) {
+        updateState { it.copy(searchQuery = query) }
+    }
 
+    override fun onQueryTextSubmit(query: String?): Boolean {
+        handleSearchMode(true)
+        handleSearch(query)
+        return true
+    }
+
+    override fun onQueryTextChange(newText: String?): Boolean {
+        handleSearchMode(true)
+        handleSearch(newText)
+        return true
+    }
+
+    override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
+        handleSearchMode(true)
+        return true
+    }
+
+    override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
+        handleSearchMode(false)
+        return true
+    }
 }
 
 data class ArticleState(

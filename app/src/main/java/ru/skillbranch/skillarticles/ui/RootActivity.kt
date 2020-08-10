@@ -1,9 +1,11 @@
 package ru.skillbranch.skillarticles.ui
 
 import android.os.Bundle
+import android.view.Menu
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProviders
@@ -11,21 +13,21 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_root.*
 import kotlinx.android.synthetic.main.layout_bottombar.*
 import kotlinx.android.synthetic.main.layout_submenu.*
+import kotlinx.android.synthetic.main.search_view_layout.*
 import ru.skillbranch.skillarticles.R
 import ru.skillbranch.skillarticles.extensions.dpToIntPx
 import ru.skillbranch.skillarticles.viewmodels.*
 
 class RootActivity : AppCompatActivity() {
-    protected val notifications = MutableLiveData<Event<Notify>>()
 
     private lateinit var viewModel: ArticleViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_root)
-        setupToolbar()
         setupBottombar()
         setupSubmenu()
+        setupToolbar()
 
         val vmFactory = ViewModelFactory("0")
         viewModel = ViewModelProviders.of(this, vmFactory).get(ArticleViewModel::class.java)
@@ -42,7 +44,6 @@ class RootActivity : AppCompatActivity() {
             .setAnchorView(bottombar)
             .setActionTextColor(getColor(R.color.color_accent_dark))
         when (notify) {
-//            is Notify.TextMessage -> {}
             is Notify.ActionMessage -> {
                 snackbar.setAction(notify.actionLabel) {
                     notify.actionHandler.invoke()
@@ -97,12 +98,6 @@ class RootActivity : AppCompatActivity() {
         btn_bookmark.setOnClickListener { viewModel.handleBookmark() }
         btn_settings.setOnClickListener { viewModel.handleToggleMenu() }
 
-
-//        btn_like.setOnClickListener {
-//            Snackbar.make(coordinator_container, "test", Snackbar.LENGTH_LONG)
-//                .setAnchorView(bottombar)
-//                .show()
-//        }
     }
 
     private fun setupSubmenu() {
@@ -117,11 +112,27 @@ class RootActivity : AppCompatActivity() {
         val logo = if (toolbar.childCount > 2) toolbar.getChildAt(2) as ImageView else null
         logo?.scaleType = ImageView.ScaleType.CENTER_CROP
         val lp = logo?.layoutParams as Toolbar.LayoutParams
-        lp?.let {
+        lp.let {
             it.width = this.dpToIntPx(40)
             it.height = this.dpToIntPx(40)
             it.marginEnd = this.dpToIntPx(16)
             logo.layoutParams = it
         }
     }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_search, menu)
+        val menuItem = menu?.findItem(R.id.action_search)
+        val searchView = menuItem?.actionView as SearchView
+        searchView.queryHint = "Search"
+        if (viewModel.currentState.isSearch) {
+            menuItem.expandActionView()
+            searchView.setQuery(viewModel.currentState.searchQuery, false)
+        }
+        menuItem.setOnActionExpandListener(viewModel)
+        searchView.setOnQueryTextListener(viewModel)
+
+        return super.onCreateOptionsMenu(menu)
+    }
+
 }
