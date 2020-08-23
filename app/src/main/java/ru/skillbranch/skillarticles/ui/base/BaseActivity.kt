@@ -19,20 +19,20 @@ abstract class BaseActivity<T : BaseViewModel<out IViewModelState>> : AppCompatA
         super.onCreate(savedInstanceState)
         setContentView(layout)
         setupViews()
-        //binding.onFinishInflate()
-        //viewModel.observeState(this){binding.bind(it)}
+        binding.onFinishInflate()
+        viewModel.observeState(this) { binding.bind(it) }
         viewModel.observeNotifications(this) { renderNotification(it) }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         viewModel.saveState(outState)
-        //binding.saveUi(outState)
+        binding.saveUi(outState)
         super.onSaveInstanceState(outState)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         viewModel.restoreState(savedInstanceState)
-        //binding.restoreUi(savedInstanceState)
+        binding.restoreUi(savedInstanceState)
     }
 }
