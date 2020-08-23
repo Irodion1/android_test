@@ -1,5 +1,6 @@
 package ru.skillbranch.skillarticles.viewmodels
 
+import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import androidx.appcompat.widget.SearchView
@@ -10,6 +11,10 @@ import ru.skillbranch.skillarticles.data.repositories.ArticleRepository
 import ru.skillbranch.skillarticles.extensions.data.toAppSettings
 import ru.skillbranch.skillarticles.extensions.data.toArticlePersonalInfo
 import ru.skillbranch.skillarticles.extensions.format
+import ru.skillbranch.skillarticles.extensions.indexesOf
+import ru.skillbranch.skillarticles.viewmodels.base.BaseViewModel
+import ru.skillbranch.skillarticles.viewmodels.base.IViewModelState
+import ru.skillbranch.skillarticles.viewmodels.base.Notify
 
 class ArticleViewModel(private val articleId: String) : BaseViewModel<ArticleState>(ArticleState()),
     IArticleViewModel, SearchView.OnQueryTextListener, MenuItem.OnActionExpandListener {
@@ -87,7 +92,7 @@ class ArticleViewModel(private val articleId: String) : BaseViewModel<ArticleSta
     }
 
     override fun handleLike() {
-        Log.e("ArticleViewModel", "hadle like: ");
+        Log.e("ArticleViewModel", "hadle like: ")
         val isLiked = currentState.isLike
         val toogleLike = {
             val info = currentState.toArticlePersonalInfo()
@@ -124,17 +129,18 @@ class ArticleViewModel(private val articleId: String) : BaseViewModel<ArticleSta
     }
 
     override fun handleSearch(query: String?) {
-        updateState { it.copy(searchQuery = query) }
+        query ?: return
+        val result = (currentState.content.firstOrNull() as? String).indexesOf(query)
+            .map { it to it + query.length }
+        updateState { it.copy(searchQuery = query, searchResults = result) }
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {
-        handleSearchMode(true)
         handleSearch(query)
         return true
     }
 
     override fun onQueryTextChange(newText: String?): Boolean {
-        handleSearchMode(true)
         handleSearch(newText)
         return true
     }
@@ -147,6 +153,14 @@ class ArticleViewModel(private val articleId: String) : BaseViewModel<ArticleSta
     override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
         handleSearchMode(false)
         return true
+    }
+
+    fun handleUpResult() {
+        updateState { it.copy(searchPosition = it.searchPosition.dec()) }
+    }
+
+    fun handleDownResult() {
+        updateState { it.copy(searchPosition = it.searchPosition.inc()) }
     }
 }
 
@@ -172,4 +186,11 @@ data class ArticleState(
     val poster: String? = null,
     val content: List<Any> = emptyList(),
     val review: List<Any> = emptyList()
-)
+) : IViewModelState {
+    override fun save(outState: Bundle) {
+    }
+
+    override fun restore(savedState: Bundle): IViewModelState {
+        return this
+    }
+}
