@@ -7,20 +7,23 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_root.*
 import kotlinx.android.synthetic.main.layout_bottombar.*
 import kotlinx.android.synthetic.main.layout_submenu.*
-import kotlinx.android.synthetic.main.search_view_layout.*
 import ru.skillbranch.skillarticles.R
 import ru.skillbranch.skillarticles.extensions.dpToIntPx
-import ru.skillbranch.skillarticles.viewmodels.*
+import ru.skillbranch.skillarticles.viewmodels.ArticleState
+import ru.skillbranch.skillarticles.viewmodels.ArticleViewModel
+import ru.skillbranch.skillarticles.viewmodels.Notify
+import ru.skillbranch.skillarticles.viewmodels.ViewModelFactory
 
 class RootActivity : AppCompatActivity() {
 
     private lateinit var viewModel: ArticleViewModel
+    private var searchQuery: String? = null
+    private var isSearching = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +36,10 @@ class RootActivity : AppCompatActivity() {
         viewModel = ViewModelProviders.of(this, vmFactory).get(ArticleViewModel::class.java)
         viewModel.observeState(this) {
             renderUi(it)
+            if (it.isSearch) {
+                isSearching = true
+                searchQuery = it.searchQuery
+            }
         }
         viewModel.observeNotifications(this) {
             renderNotification(it)
@@ -97,7 +104,6 @@ class RootActivity : AppCompatActivity() {
         btn_share.setOnClickListener { viewModel.handleShare() }
         btn_bookmark.setOnClickListener { viewModel.handleBookmark() }
         btn_settings.setOnClickListener { viewModel.handleToggleMenu() }
-
     }
 
     private fun setupSubmenu() {
@@ -123,14 +129,15 @@ class RootActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_search, menu)
         val menuItem = menu?.findItem(R.id.action_search)
-        val searchView = menuItem?.actionView as SearchView
-        searchView.queryHint = "Search"
-        if (viewModel.currentState.isSearch) {
-            menuItem.expandActionView()
-            searchView.setQuery(viewModel.currentState.searchQuery, false)
+        val searchView = menuItem?.actionView as? SearchView
+        searchView?.queryHint = "Search"
+        if (isSearching) {
+            menuItem?.expandActionView()
+            searchView?.setQuery(searchQuery, false)
+            searchView?.clearFocus()
         }
-        menuItem.setOnActionExpandListener(viewModel)
-        searchView.setOnQueryTextListener(viewModel)
+        menuItem?.setOnActionExpandListener(viewModel)
+        searchView?.setOnQueryTextListener(viewModel)
 
         return super.onCreateOptionsMenu(menu)
     }

@@ -14,11 +14,11 @@
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
-            android:theme="@style/ArticleBarsTheme"
             style="@style/ArticleToolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:elevation="4dp"
+            android:theme="@style/ArticleBarsTheme"
             app:layout_anchor="@+id/appbar"
             app:layout_anchorGravity="center"
             app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
@@ -51,13 +51,13 @@
         android:layout_height="96dp"
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="8dp"
-        android:elevation="8dp"
         android:layout_marginBottom="8dp"
+        android:elevation="8dp"
         android:theme="@style/ArticleBarsTheme"
-        app:layout_dodgeInsetEdges="bottom"
         android:visibility="gone"
-        tools:visibility="visible"
-        app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"/>
+        app:layout_behavior=".ui.custom.behaviors.SubmenuBehavior"
+        app:layout_dodgeInsetEdges="bottom"
+        tools:visibility="visible" />
 
     <ru.skillbranch.skillarticles.ui.custom.Bottombar
         android:id="@+id/bottombar"
@@ -65,7 +65,6 @@
         android:layout_height="?attr/actionBarSize"
         android:layout_gravity="bottom"
         android:theme="@style/ArticleBarsTheme"
-        app:layout_insetEdge="bottom"
-        app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"/>
-
+        app:layout_behavior=".ui.custom.behaviors.BottomBarBehavior"
+        app:layout_insetEdge="bottom" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
