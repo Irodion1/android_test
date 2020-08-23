@@ -18,6 +18,7 @@
         <item name="colorOnError">#FFFFFF</item>
         <item name="colorSurface">@color/color_surface</item>
         <item name="colorOnSurface">@color/color_on_surface</item>
+
         <item name="snackbarStyle">@style/CustomSnackbar</item>
     </style>
 
@@ -33,6 +34,7 @@
     <style name="ArticleToolbar" parent="Widget.MaterialComponents.Toolbar.Primary">
         <item name="titleTextColor">?attr/colorOnPrimary</item>
         <item name="contentInsetStartWithNavigation">0dp</item>
+        <item name="android:textColorSecondary">?attr/colorOnPrimary</item>
     </style>
 
 
@@ -45,7 +47,7 @@
     </style>
 
     <style name="BottombarSearchIcon" parent="BottombarIcon">
-
+        <item name="android:tint">@color/tint_search_color</item>
     </style>
 
     <style name="CustomSnackbar" parent="Widget.MaterialComponents.Snackbar">
