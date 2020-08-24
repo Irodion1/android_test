@@ -1,13 +1,13 @@
 package ru.skillbranch.skillarticles.extensions
 
+import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.marginBottom
 import androidx.core.view.marginLeft
 import androidx.core.view.marginRight
 import androidx.core.view.marginTop
-import androidx.core.widget.NestedScrollView
 
-fun NestedScrollView.setMarginOptionally(
+fun View.setMarginOptionally(
     bottom: Int = marginBottom,
     top: Int = marginTop,
     left: Int = marginLeft,

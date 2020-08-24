@@ -43,10 +43,7 @@ class RootActivity : BaseActivity<ArticleViewModel>(), IArticleView {
         ViewModelProviders.of(this, vmFactory).get(ArticleViewModel::class.java)
     }
 
-    override val binding: Binding by lazy { ArticleBinding() }
-
-    private var searchQuery: String? = null
-    private var isSearching = false
+    override val binding: ArticleBinding by lazy { ArticleBinding() }
 
     private val bgColor by AttrValue(R.attr.colorSecondary)
     private val fgColor by AttrValue(R.attr.colorOnSecondary)
@@ -129,10 +126,11 @@ class RootActivity : BaseActivity<ArticleViewModel>(), IArticleView {
         val menuItem = menu?.findItem(R.id.action_search)
         val searchView = menuItem?.actionView as? SearchView
         searchView?.queryHint = "Search"
-        if (isSearching) {
+        if (binding.isSearching) {
             menuItem?.expandActionView()
-            searchView?.setQuery(searchQuery, false)
-            searchView?.clearFocus()
+            searchView?.setQuery(binding.searchQuery, false)
+            if (binding.isFocusedSearch) searchView?.requestFocus()
+            else searchView?.clearFocus()
         }
         menuItem?.setOnActionExpandListener(viewModel)
         searchView?.setOnQueryTextListener(viewModel)
@@ -183,10 +181,24 @@ class RootActivity : BaseActivity<ArticleViewModel>(), IArticleView {
     override fun hideSearchBar() {
         bottombar.setSearchState(false)
         scroll.setMarginOptionally(bottom = dpToIntPx(0))
-        clearSearchResult()
     }
 
     inner class ArticleBinding : Binding() {
+
+        var isFocusedSearch: Boolean = false
+
+        var isSearching: Boolean = false
+
+        var searchQuery: String? = null
+
+        var isSearch: Boolean by ObserveProp(false) {
+            if (it) showSearchBar() else hideSearchBar()
+        }
+
+        private var searchResults: List<Pair<Int, Int>> by ObserveProp(emptyList())
+
+        private var searchPosition: Int by ObserveProp(0)
+
 
         private var isLoadingContent: Boolean by ObserveProp(true)
 
@@ -211,15 +223,6 @@ class RootActivity : BaseActivity<ArticleViewModel>(), IArticleView {
             tv_text_content.setText(it, TextView.BufferType.SPANNABLE)
             tv_text_content.movementMethod = ScrollingMovementMethod()
         }
-
-        var isSearch: Boolean by ObserveProp(false) {
-            if (it) showSearchBar() else hideSearchBar()
-        }
-
-        private var searchResults: List<Pair<Int, Int>> by ObserveProp(emptyList())
-
-        private var searchPosition: Int by ObserveProp(0)
-
 
         private var isBigText: Boolean by RenderProp(false) {
             if (it) {
@@ -280,9 +283,11 @@ class RootActivity : BaseActivity<ArticleViewModel>(), IArticleView {
         }
 
         override fun saveUi(outState: Bundle) {
+            outState.putBoolean(::isFocusedSearch.name, search_view?.hasFocus() ?: false)
         }
 
         override fun restoreUi(savedState: Bundle) {
+            isFocusedSearch = savedState.getBoolean(::isFocusedSearch.name)
         }
     }
 }

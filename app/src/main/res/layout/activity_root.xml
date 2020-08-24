@@ -43,6 +43,7 @@
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:text="Loading.."
+            android:saveEnabled="false"
             tools:text="@tools:sample/lorem" />
     </androidx.core.widget.NestedScrollView>
 
