@@ -6,7 +6,11 @@ import androidx.preference.PreferenceManager
 import ru.skillbranch.skillarticles.data.delegates.PrefDelegate
 
 class PrefManager(context: Context) {
-    val preferences: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+    val preferences: SharedPreferences by lazy {
+        PreferenceManager.getDefaultSharedPreferences(
+            context
+        )
+    }
 
     var storedBoolean by PrefDelegate(false)
     var storedString by PrefDelegate("")
