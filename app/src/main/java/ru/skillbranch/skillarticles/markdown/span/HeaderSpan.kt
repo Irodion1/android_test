@@ -53,11 +53,14 @@ class HeaderSpan constructor(
     }
 
     override fun updateMeasureState(paint: TextPaint) {
-        //TODO implement me
     }
 
     override fun updateDrawState(tp: TextPaint) {
-        //TODO implement me
+        with(tp) {
+            textSize *= sizes.getOrElse(level) { 1f }
+            isFakeBoldText = true
+            color = textColor
+        }
     }
 
     override fun drawLeadingMargin(
@@ -70,7 +73,7 @@ class HeaderSpan constructor(
 
     override fun getLeadingMargin(first: Boolean): Int {
         //TODO implement me
-        return 0
+        return (sizes.getOrElse(level) { 1f }).toInt() * 2
     }
 
     private inline fun Paint.forLine(block: () -> Unit) {
