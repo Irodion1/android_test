@@ -16,13 +16,12 @@ object MarkdownParser {
     private const val RULE_GROUP = "(^[-_*]{3}$)"
     private const val INLINE_GROUP = "((?<!`)`[^`\\s].*?[^`\\s]?`(?!`))"
     private const val LINK_GROUP = "(\\[[^\\[\\]]*?]\\(.+?\\)|^\\[*?]\\(.*?\\))"
-    private const val BLOCK_CODE_GROUP = "" //TODO implement me
-    private const val ORDER_LIST_GROUP = "" //TODO implement me
+    private const val BLOCK_CODE_GROUP = "(^```[\\s\\S]+?```$)"
+    private const val ORDER_LIST_GROUP = "(^\\d{1,2}\\.\\s.+?$)"
 
     //result regex
-    private const val MARKDOWN_GROUPS = "$UNORDERED_LIST_ITEM_GROUP|$HEADER_GROUP|$QUOTE_GROUP" +
-            "|$ITALIC_GROUP|$BOLD_GROUP|$STRIKE_GROUP|$RULE_GROUP|$INLINE_GROUP|$LINK_GROUP"
-    //|$BLOCK_CODE_GROUP|$ORDER_LIST_GROUP optionally
+    private const val MARKDOWN_GROUPS =
+        "$UNORDERED_LIST_ITEM_GROUP|$HEADER_GROUP|$QUOTE_GROUP|$ITALIC_GROUP|$BOLD_GROUP|$STRIKE_GROUP|$RULE_GROUP|$INLINE_GROUP|$LINK_GROUP|$BLOCK_CODE_GROUP|$ORDER_LIST_GROUP"
 
     private val elementPattern by lazy { Pattern.compile(MARKDOWN_GROUPS, Pattern.MULTILINE) }
 
@@ -38,8 +37,18 @@ object MarkdownParser {
     /**
      * Clears md text to string without md
      */
-    fun clear(text: String): String? {
-        return text
+    fun clear(text: String?): String? {
+        text ?: return null
+        val elements = mutableListOf<Element>().also { it.addAll(findElements(text)) }
+        val result = mutableListOf<String?>()
+        elements.forEach {
+            if (it.elements.isEmpty()) {
+                result.add(it.text.toString())
+            } else {
+                result.add(clear(it.text.toString()))
+            }
+        }
+        return result.joinToString(separator = "")
     }
 
     /**
@@ -172,12 +181,53 @@ object MarkdownParser {
                 }
                 //10 -> BLOCK CODE - optionally
                 10 -> {
-                    //TODO implement me
+                    foundText = text.subSequence(startIndex.plus(3), endIndex.minus(3)).toString()
+
+                    if (text.contains(LINE_SEPARATOR)) {
+                        for ((index, line) in text.lines().withIndex()) {
+                            when (index) {
+                                text.lines().lastIndex -> parents.add(
+                                    Element.BlockCode(
+                                        Element.BlockCode.Type.END,
+                                        line
+                                    )
+                                )
+                                0 -> parents.add(
+                                    Element.BlockCode(
+                                        Element.BlockCode.Type.START,
+                                        line + LINE_SEPARATOR
+                                    )
+                                )
+                                else -> parents.add(
+                                    Element.BlockCode(
+                                        Element.BlockCode.Type.MIDDLE,
+                                        line + LINE_SEPARATOR
+                                    )
+                                )
+                            }
+                        }
+                    } else {
+                        parents.add(
+                            Element.BlockCode(
+                                Element.BlockCode.Type.SINGLE,
+                                foundText
+                            )
+                        )
+                    }
+
+                    lastStartIndex = endIndex
                 }
 
                 //11 -> NUMERIC LIST
                 11 -> {
-                    //TODO implement me
+                    val reg = "(^\\d{1,2}.)".toRegex().find(text.substring(startIndex, endIndex))
+                    val order = reg!!.value
+                    foundText =
+                        text.subSequence(startIndex.plus(order.length.inc()), endIndex).toString()
+                    val subs = findElements(foundText)
+                    val element = Element.OrderedListItem(order, foundText.toString(), subs)
+                    parents.add(element)
+                    lastStartIndex = endIndex
                 }
             }
         }
@@ -264,4 +314,20 @@ sealed class Element() {
         enum class Type { START, END, MIDDLE, SINGLE }
     }
 
+}
+
+private fun Element.spread(): List<Element> {
+    return mutableListOf<Element>().also {
+        it.add(this)
+        it.addAll(this.elements.spread())
+    }
+}
+
+private fun List<Element>.spread(): List<Element> {
+    val elements = mutableListOf<Element>()
+
+    if (this.isNotEmpty()) elements.addAll(
+        this.fold(mutableListOf()) { acc, el -> acc.also { it.addAll(el.spread()) } }
+    )
+    return elements
 }

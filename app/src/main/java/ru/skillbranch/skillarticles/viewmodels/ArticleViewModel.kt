@@ -13,6 +13,7 @@ import ru.skillbranch.skillarticles.extensions.data.toAppSettings
 import ru.skillbranch.skillarticles.extensions.data.toArticlePersonalInfo
 import ru.skillbranch.skillarticles.extensions.format
 import ru.skillbranch.skillarticles.extensions.indexesOf
+import ru.skillbranch.skillarticles.markdown.MarkdownParser
 import ru.skillbranch.skillarticles.viewmodels.base.BaseViewModel
 import ru.skillbranch.skillarticles.viewmodels.base.IViewModelState
 import ru.skillbranch.skillarticles.viewmodels.base.Notify
@@ -20,6 +21,7 @@ import ru.skillbranch.skillarticles.viewmodels.base.Notify
 class ArticleViewModel(private val articleId: String) : BaseViewModel<ArticleState>(ArticleState()),
     IArticleViewModel, SearchView.OnQueryTextListener, MenuItem.OnActionExpandListener {
     val repositiry = ArticleRepository
+    private var clearContent: String? = null
     var menuIsShown: Boolean = false
 
     init {
@@ -131,7 +133,12 @@ class ArticleViewModel(private val articleId: String) : BaseViewModel<ArticleSta
 
     override fun handleSearch(query: String?) {
         query ?: return
-        val result = currentState.content
+
+        if (clearContent == null) {
+            clearContent = MarkdownParser.clear(currentState.content)
+        }
+
+        val result = clearContent
             .indexesOf(query)
             .map { it to it + query.length }
         updateState {
