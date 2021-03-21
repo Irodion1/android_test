@@ -78,7 +78,7 @@ class BlockCodeSpan(
             Element.BlockCode.Type.MIDDLE -> {
                 paint.forBackground {
                     rect.set(0f, top.toFloat(), canvas.width.toFloat(), bottom.toFloat())
-                    canvas.drawPath(path, paint)
+                    canvas.drawRect(rect, paint)
                 }
 
                 paint.forText {
@@ -89,7 +89,7 @@ class BlockCodeSpan(
             Element.BlockCode.Type.SINGLE -> {
                 paint.forBackground {
                     rect.set(0f, top + padding, canvas.width.toFloat(), bottom - padding)
-                    canvas.drawPath(path, paint)
+                    canvas.drawRoundRect(rect, cornerRadius, cornerRadius, paint)
                 }
 
                 paint.forText {
