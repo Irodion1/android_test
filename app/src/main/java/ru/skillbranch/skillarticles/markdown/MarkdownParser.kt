@@ -183,10 +183,10 @@ object MarkdownParser {
                 10 -> {
                     foundText = text.subSequence(startIndex.plus(3), endIndex.minus(3)).toString()
 
-                    if (text.contains(LINE_SEPARATOR)) {
-                        for ((index, line) in text.lines().withIndex()) {
+                    if (foundText.contains(LINE_SEPARATOR)) {
+                        for ((index, line) in foundText.lines().withIndex()) {
                             when (index) {
-                                text.lines().lastIndex -> parents.add(
+                                foundText.lines().lastIndex -> parents.add(
                                     Element.BlockCode(
                                         Element.BlockCode.Type.END,
                                         line
@@ -314,20 +314,4 @@ sealed class Element() {
         enum class Type { START, END, MIDDLE, SINGLE }
     }
 
-}
-
-private fun Element.spread(): List<Element> {
-    return mutableListOf<Element>().also {
-        it.add(this)
-        it.addAll(this.elements.spread())
-    }
-}
-
-private fun List<Element>.spread(): List<Element> {
-    val elements = mutableListOf<Element>()
-
-    if (this.isNotEmpty()) elements.addAll(
-        this.fold(mutableListOf()) { acc, el -> acc.also { it.addAll(el.spread()) } }
-    )
-    return elements
 }
