@@ -13,7 +13,7 @@ import androidx.core.view.isVisible
 import com.google.android.material.shape.MaterialShapeDrawable
 import kotlinx.android.synthetic.main.layout_bottombar.view.*
 import ru.skillbranch.skillarticles.R
-import ru.skillbranch.skillarticles.ui.custom.behaviors.BottomBarBehavior
+import ru.skillbranch.skillarticles.ui.custom.behaviors.BottombarBehavior
 import kotlin.math.hypot
 
 class Bottombar @JvmOverloads constructor(
@@ -24,7 +24,7 @@ class Bottombar @JvmOverloads constructor(
     var isSearchMode = false
 
     override fun getBehavior(): CoordinatorLayout.Behavior<Bottombar> {
-        return BottomBarBehavior()
+        return BottombarBehavior()
     }
 
     init {
